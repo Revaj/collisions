@@ -7,13 +7,16 @@
 #include <functional>
 
 //For MAC
-#define GL_SILENCE_DEPRECATION 
-#define GLFW_INCLUDE_NONE
+#if defined(__APPLE__)
+    #define GL_SILENCE_DEPRECATION 
+    #define GLFW_INCLUDE_NONE
+    #include <OpenGL/gl3.h>
+#else
+    #include <glad/glad.h>
+    #include <GLFW/glfw3.h>
+#endif
 
-//Opengl and glm
-#include <GLFW/glfw3.h>
-//#include <glad.h> to windows or linux
-#include <OpenGL/gl3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -769,7 +772,13 @@ int main() {
         return -1; 
     }
     glfwMakeContextCurrent(window);
-    
+
+#ifndef __APPLE__
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        return -1;
+    }
+#endif // !(__APPLE__)
+
     // Init with menu
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
     glfwSetCursorPosCallback(window, mouse_callback);

@@ -8,10 +8,13 @@ find_package(OpenGL REQUIRED)
 
 find_package(glfw3 REQUIRED)
 
-find_path(GLM_INCLUDE_DIR glm/glm.hpp
-    HINTS 
-    /opt/homebrew/include 
-)
+find_package(glm REQUIRED)
+
+if (NOT APPLE)
+    find_package(glad REQUIRED)
+endif()
+
+
 
 set(IMGUI_DIR "${CMAKE_SOURCE_DIR}/third_party/imgui")
 
@@ -41,3 +44,9 @@ target_link_libraries(colisiones PRIVATE
     glfw
     OpenGL::GL
 )
+
+if (NOT APPLE)
+target_link_libraries(colisiones PRIVATE
+    glad::glad
+)
+endif()
